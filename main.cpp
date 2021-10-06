@@ -1,21 +1,25 @@
 #include <iostream>
-#include <ctime>
 
 using namespace std;
 
 const int rSIZE = 3;
 
 void printField(string array[rSIZE][rSIZE]);
+
 void printUI();
+
 void fillingSFiled(string array[rSIZE][rSIZE]);
-void moveUser(string figure, string array[3][3]);
+
+void moveUser(string figure, string array[rSIZE][rSIZE]);
+
 void moveAI(string figure, string array[rSIZE][rSIZE]);
+
 int getRand();
+
 bool hasEmptySlot(string array[rSIZE][rSIZE]);
 
 int main() {
 
-    int countParties = 0;
     string figure = "";
     string arrayTicTacToe[rSIZE][rSIZE];
     bool availableStep = false;
@@ -31,7 +35,7 @@ int main() {
         while (availableStep) {
             moveUser(figure, arrayTicTacToe);
             availableStep = hasEmptySlot(arrayTicTacToe);
-            if(availableStep){
+            if (availableStep) {
                 moveAI("o", arrayTicTacToe);
                 availableStep = hasEmptySlot(arrayTicTacToe);
             }
@@ -41,7 +45,7 @@ int main() {
         while (availableStep) {
             moveAI("x", arrayTicTacToe);
             availableStep = hasEmptySlot(arrayTicTacToe);
-            if(availableStep){
+            if (availableStep) {
                 moveUser(figure, arrayTicTacToe);
                 availableStep = hasEmptySlot(arrayTicTacToe);
             }
@@ -56,95 +60,121 @@ void moveAI(string figure, string array[rSIZE][rSIZE]) {
     int positionX = getRand();
     int positionY = getRand();
 
-    if(array[positionX][positionY] == "|"){
+    if (array[positionX][positionY] == "|") {
         cout << "Move AI" << endl;
         array[positionX][positionY] = figure;
         printField(array);
-    } else{
+    } else {
         moveAI(figure, array);
     }
 }
 
 void moveUser(string figure, string array[rSIZE][rSIZE]) {
-    int position;
-    bool exit = false;
-    printUI();
-    cout << "Select a field:";
-    cin >> position;
-    cout << endl;
-    if (position >= 1 && position <= 9) {
-        while (!exit) {
+    bool stepUser = false;
+    while (!stepUser) {
+        int position;
+        cout << "Select a field:";
+        cin >> position;
+        cout << endl;
+        if (position >= 1 && position <= 9) {
             switch (position) {
                 case 1:
                     if (array[position - 1][position - 1] != "x" &&
                         array[position - 1][position - 1] != "o") {
                         array[position - 1][position - 1] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!";
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 2:
                     if (array[position - 2][position - 1] != "x" &&
                         array[position - 2][position - 1] != "o") {
                         array[position - 2][position - 1] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!";
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 3:
                     if (array[position - 3][position - 1] != "x" &&
                         array[position - 3][position - 1] != "o") {
                         array[position - 3][position - 1] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!";
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 4:
                     if (array[position - 3][position - 4] != "x" &&
                         array[position - 3][position - 4] != "o") {
                         array[position - 3][position - 4] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!";
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 5:
                     if (array[position - 4][position - 4] != "x" &&
                         array[position - 4][position - 4] != "o") {
                         array[position - 4][position - 4] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!";
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 6:
                     if (array[position - 5][position - 4] != "x" &&
                         array[position - 5][position - 4] != "o") {
                         array[position - 5][position - 4] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!";
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 7:
                     if (array[position - 5][position - 7] != "x" &&
                         array[position - 5][position - 7] != "o") {
                         array[position - 5][position - 7] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!";
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 8:
                     if (array[position - 6][position - 7] != "x" &&
                         array[position - 6][position - 7] != "o") {
                         array[position - 6][position - 7] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!";
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 9:
                     if (array[position - 7][position - 7] != "x" &&
                         array[position - 7][position - 7] != "o") {
                         array[position - 7][position - 7] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!";
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
             }
+        } else {
+            cout << "The position is within [1...9]!" << endl;
         }
-        cout << "Move User" << endl;
-        printField(array);
-    } else {
-        cout << "The position is within [1...9]!" << endl;
     }
+    cout << "Move User" << endl;
+    printField(array);
 }
 
 void fillingSFiled(string array[rSIZE][rSIZE]) {
@@ -171,14 +201,14 @@ void printUI() {
          << 7 << 8 << 9 << endl;
 }
 
-int getRand(){
+int getRand() {
     return rand() % 3;
 }
 
-bool hasEmptySlot(string array[rSIZE][rSIZE]){
-    for(int i = 0; i < rSIZE; i++){
-        for(int j = 0; j < rSIZE; j++){
-            if(array[i][j] == "|"){
+bool hasEmptySlot(string array[rSIZE][rSIZE]) {
+    for (int i = 0; i < rSIZE; i++) {
+        for (int j = 0; j < rSIZE; j++) {
+            if (array[i][j] == "|") {
                 return true;
             }
         }
