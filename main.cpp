@@ -4,12 +4,14 @@
 using namespace std;
 
 const int rSIZE = 3;
+int scoreCross = 0;
+int scoreZero = 0;
 
 int getRand();
 
 void printField(string array[rSIZE][rSIZE]);
 
-void printMenu(int shoreCross, int shoreZero);
+void printMenu();
 
 void printNumPad();
 
@@ -33,16 +35,13 @@ int main() {
 
     bool availableStep = false;
     bool hasWinner = true;
-
-    int shoreCross = 0;
-    int shoreZero = 0;
     int menuPoint = 0;
     int exitMenu = 1;
 
     fillingSFiled(arrayTicTacToe);
 
     while (exitMenu != 2) {
-        printMenu(shoreCross, shoreZero);
+        printMenu();
         fillingSFiled(arrayTicTacToe);
         cin >> menuPoint;
         cout << endl;
@@ -102,7 +101,7 @@ void moveAI(string figure, string array[rSIZE][rSIZE]) {
     int positionY = getRand();
 
     if (array[positionX][positionY] == "|") {
-        cout << "Move AI1" << endl;
+        cout << "Move AI" << endl;
         array[positionX][positionY] = figure;
         printField(array);
     } else {
@@ -243,10 +242,10 @@ void printNumPad() {
     cout << "Select the field number:";
 }
 
-void printMenu(int shoreCross, int shoreZero) {
+void printMenu() {
     cout << "..::TIC-TAC-TOE::.." << endl;
     cout << ":::::::GAME::::::::" << endl;
-    cout << "Cross:" << shoreCross << " " << "Zero:" << shoreZero << endl;
+    cout << "Cross:" << scoreCross << " " << "Zero:" << scoreZero << endl;
     cout << "1. New game" << endl;
     cout << "2. Exit" << endl;
     cout << "Enter:";
@@ -266,6 +265,11 @@ bool hasEmptySlot(string array[rSIZE][rSIZE]) {
 bool getWinner(string figure, string array[rSIZE][rSIZE]) {
     if (isWinner(figure, array)) {
         cout << figure << " - winner!" << endl << endl;
+        if(figure == "x"){
+            scoreCross++;
+        }else if(figure == "o"){
+            scoreZero++;
+        }
         return true;
     }
     return false;
