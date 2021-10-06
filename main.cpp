@@ -1,20 +1,23 @@
 #include <iostream>
+#include <ctime>
 
 using namespace std;
 
 const int rSIZE = 3;
 
+int getRand();
+
 void printField(string array[rSIZE][rSIZE]);
 
-void printUI();
+void printMenu(int shoreCross, int shoreZero);
+
+void printNumPad();
 
 void fillingSFiled(string array[rSIZE][rSIZE]);
 
 void moveUser(string figure, string array[rSIZE][rSIZE]);
 
 void moveAI(string figure, string array[rSIZE][rSIZE]);
-
-int getRand();
 
 bool hasEmptySlot(string array[rSIZE][rSIZE]);
 
@@ -24,53 +27,74 @@ bool isWinner(string figure, string array[rSIZE][rSIZE]);
 
 int main() {
     srand(time(NULL));
-    string figure = "";
+
     string arrayTicTacToe[rSIZE][rSIZE];
+    string figure = "";
+
     bool availableStep = false;
     bool hasWinner = true;
 
+    int shoreCross = 0;
+    int shoreZero = 0;
+    int menuPoint = 0;
+    int exitMenu = 1;
+
     fillingSFiled(arrayTicTacToe);
 
-    cout << "     ...::TIC-TAC-TOE:::..." << endl << "(c) 2021, by Hanexical, w_myslicki" << endl << endl
-         << "Choose who to play for ('x' or 'o')" << endl << "Enter:";
-    cin >> figure;
-
-    if (figure == "x") {
-        hasWinner = getWinner(figure, arrayTicTacToe);
-        availableStep = hasEmptySlot(arrayTicTacToe);
-        while (!hasWinner && availableStep) {
-            moveUser(figure, arrayTicTacToe);
-            hasWinner = getWinner(figure, arrayTicTacToe);
-            availableStep = hasEmptySlot(arrayTicTacToe);
-            if (!hasWinner && availableStep) {
-                moveAI("o", arrayTicTacToe);
-                hasWinner = getWinner("o", arrayTicTacToe);
-                availableStep = hasEmptySlot(arrayTicTacToe);
-            } else if (!availableStep && !hasWinner) {
-                cout << "Draw!";
-                return 1;
-            }
+    while (exitMenu != 2) {
+        printMenu(shoreCross, shoreZero);
+        fillingSFiled(arrayTicTacToe);
+        cin >> menuPoint;
+        cout << endl;
+        switch (menuPoint) {
+            case 1:
+                cout << "Choose who to play for ('x' OR 'o')" << endl;
+                cout << "Enter:";
+                cin >> figure;
+                cout << endl;
+                if (figure == "x") {
+                    hasWinner = getWinner(figure, arrayTicTacToe);
+                    availableStep = hasEmptySlot(arrayTicTacToe);
+                    while (!hasWinner && availableStep) {
+                        moveUser(figure, arrayTicTacToe);
+                        hasWinner = getWinner(figure, arrayTicTacToe);
+                        availableStep = hasEmptySlot(arrayTicTacToe);
+                        if (!hasWinner && availableStep) {
+                            moveAI("o", arrayTicTacToe);
+                            hasWinner = getWinner("o", arrayTicTacToe);
+                            availableStep = hasEmptySlot(arrayTicTacToe);
+                        } else if (!availableStep && !hasWinner) {
+                            cout << "Draw!" << endl << endl;
+                        }
+                    }
+                } else if (figure == "o") {
+                    hasWinner = getWinner(figure, arrayTicTacToe);
+                    availableStep = hasEmptySlot(arrayTicTacToe);
+                    while (availableStep && !hasWinner) {
+                        moveAI("x", arrayTicTacToe);
+                        hasWinner = getWinner("x", arrayTicTacToe);
+                        availableStep = hasEmptySlot(arrayTicTacToe);
+                        if (availableStep && !hasWinner) {
+                            moveUser(figure, arrayTicTacToe);
+                            hasWinner = getWinner(figure, arrayTicTacToe);
+                            availableStep = hasEmptySlot(arrayTicTacToe);
+                        } else if (!availableStep) {
+                            cout << "Draw!" << endl << endl;
+                        }
+                    }
+                } else {
+                    cout << "The game is played 'x' and 'o'!" << endl << endl;
+                }
+                break;
+            case 2:
+                exitMenu = 2;
+                break;
         }
-    } else if (figure == "o") {
-        hasWinner = getWinner(figure, arrayTicTacToe);
-        availableStep = hasEmptySlot(arrayTicTacToe);
-        while (availableStep && !hasWinner) {
-            moveAI("x", arrayTicTacToe);
-            hasWinner = getWinner("x", arrayTicTacToe);
-            availableStep = hasEmptySlot(arrayTicTacToe);
-            if (availableStep && !hasWinner) {
-                moveUser(figure, arrayTicTacToe);
-                hasWinner = getWinner(figure, arrayTicTacToe);
-                availableStep = hasEmptySlot(arrayTicTacToe);
-            } else if (!availableStep) {
-                cout << "Draw!";
-                return 1;
-            }
-        }
-    } else {
-        cout << "The game is played 'x' and 'o'!";
-        return -1;
     }
+}
+
+int getRand() {
+    return rand() % 3;
 }
 
 void moveAI(string figure, string array[rSIZE][rSIZE]) {
@@ -87,85 +111,111 @@ void moveAI(string figure, string array[rSIZE][rSIZE]) {
 }
 
 void moveUser(string figure, string array[rSIZE][rSIZE]) {
+    bool stepUser = false;
     int position;
-    bool exit = false;
-    printUI();
-    cout << "Select a field:";
-    cin >> position;
-    cout << endl;
-    if (position >= 1 && position <= 9) {
-        while (!exit) {
+    while (!stepUser) {
+        printNumPad();
+        cin >> position;
+        cout << endl;
+        if (position >= 1 && position <= 9) {
             switch (position) {
                 case 1:
                     if (array[position - 1][position - 1] != "x" &&
                         array[position - 1][position - 1] != "o") {
                         array[position - 1][position - 1] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!" << endl;
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 2:
                     if (array[position - 2][position - 1] != "x" &&
                         array[position - 2][position - 1] != "o") {
                         array[position - 2][position - 1] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!" << endl;
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 3:
                     if (array[position - 3][position - 1] != "x" &&
                         array[position - 3][position - 1] != "o") {
                         array[position - 3][position - 1] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!" << endl;
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 4:
                     if (array[position - 3][position - 4] != "x" &&
                         array[position - 3][position - 4] != "o") {
                         array[position - 3][position - 4] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!" << endl;
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 5:
                     if (array[position - 4][position - 4] != "x" &&
                         array[position - 4][position - 4] != "o") {
                         array[position - 4][position - 4] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!" << endl;
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 6:
                     if (array[position - 5][position - 4] != "x" &&
                         array[position - 5][position - 4] != "o") {
                         array[position - 5][position - 4] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!" << endl;
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 7:
                     if (array[position - 5][position - 7] != "x" &&
                         array[position - 5][position - 7] != "o") {
                         array[position - 5][position - 7] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!" << endl;
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 8:
                     if (array[position - 6][position - 7] != "x" &&
                         array[position - 6][position - 7] != "o") {
                         array[position - 6][position - 7] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!" << endl;
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
                 case 9:
                     if (array[position - 7][position - 7] != "x" &&
                         array[position - 7][position - 7] != "o") {
                         array[position - 7][position - 7] = figure;
+                        stepUser = true;
+                    } else {
+                        cout << "Wrong move!" << endl;
+                        stepUser = false;
                     }
-                    exit = true;
                     break;
             }
+        } else {
+            cout << "The position is within [1...9]!" << endl;
         }
-        cout << "Move User" << endl;
-        printField(array);
-    } else {
-        cout << "The position is within [1...9]!" << endl;
     }
+    cout << "Move User" << endl;
+    printField(array);
 }
 
 void fillingSFiled(string array[rSIZE][rSIZE]) {
@@ -185,15 +235,21 @@ void printField(string array[rSIZE][rSIZE]) {
     }
 }
 
-void printUI() {
-    cout << endl << "Field" << endl;
-    cout << 1 << 2 << 3 << endl
-         << 4 << 5 << 6 << endl
-         << 7 << 8 << 9 << endl;
+void printNumPad() {
+    cout << "    !Number Pad!    " << endl;
+    cout << "|1|\t" << "|2|\t" << "|3|\t" << endl;
+    cout << "|4|\t" << "|5|\t" << "|6|\t" << endl;
+    cout << "|7|\t" << "|8|\t" << "|9|\t" << endl;
+    cout << "Select the field number:";
 }
 
-int getRand() {
-    return rand() % 3;
+void printMenu(int shoreCross, int shoreZero) {
+    cout << "..::TIC-TAC-TOE::.." << endl;
+    cout << ":::::::GAME::::::::" << endl;
+    cout << "Cross:" << shoreCross << " " << "Zero:" << shoreZero << endl;
+    cout << "1. New game" << endl;
+    cout << "2. Exit" << endl;
+    cout << "Enter:";
 }
 
 bool hasEmptySlot(string array[rSIZE][rSIZE]) {
@@ -209,7 +265,7 @@ bool hasEmptySlot(string array[rSIZE][rSIZE]) {
 
 bool getWinner(string figure, string array[rSIZE][rSIZE]) {
     if (isWinner(figure, array)) {
-        cout << figure << " - winner!";
+        cout << figure << " - winner!" << endl << endl;
         return true;
     }
     return false;
@@ -247,8 +303,8 @@ bool isWinner(string figure, string array[rSIZE][rSIZE]) {
 
     //diagonal 00-22
     for (int i = 0; i < rSIZE; i++) {
-        for (int j = rSIZE; j == i; j++) {
-            if (array[i][j] == figure) {
+        for (int j = 0; j < rSIZE; j++) {
+            if (i == j && array[i][j] == figure) {
                 figureCounter++;
                 if (figureCounter == 3) {
                     return true;
@@ -267,5 +323,15 @@ bool isWinner(string figure, string array[rSIZE][rSIZE]) {
         }
     }
 
+//    for (int j = rSIZE; j > 0; j--) {
+//        for (int i = rSIZE; i > 0; i--) {
+//            if (i == j && array[i][j] == figure) {
+//                figureCounter++;
+//                if (figureCounter == 3) {
+//                    return true;
+//                }
+//            }
+//        }
+//    }
     return false;
 }
