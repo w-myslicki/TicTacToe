@@ -5,18 +5,25 @@ using namespace std;
 const int rSIZE = 3;
 
 void printField(string array[rSIZE][rSIZE]);
+
 void printUI();
+
 void fillingSFiled(string array[rSIZE][rSIZE]);
+
 void moveUser(string figure, string array[rSIZE][rSIZE]);
+
 void moveAI(string figure, string array[rSIZE][rSIZE]);
+
 int getRand();
+
 bool hasEmptySlot(string array[rSIZE][rSIZE]);
+
 bool getWinner(string figure, string array[rSIZE][rSIZE]);
+
 bool isWinner(string figure, string array[rSIZE][rSIZE]);
 
 int main() {
-
-    int countParties = 0;
+    srand(time(NULL));
     string figure = "";
     string arrayTicTacToe[rSIZE][rSIZE];
     bool availableStep = false;
@@ -39,7 +46,7 @@ int main() {
                 moveAI("o", arrayTicTacToe);
                 hasWinner = getWinner("o", arrayTicTacToe);
                 availableStep = hasEmptySlot(arrayTicTacToe);
-            } else if(!availableStep){
+            } else if (!availableStep && !hasWinner) {
                 cout << "Draw!";
                 return 1;
             }
@@ -55,7 +62,7 @@ int main() {
                 moveUser(figure, arrayTicTacToe);
                 hasWinner = getWinner(figure, arrayTicTacToe);
                 availableStep = hasEmptySlot(arrayTicTacToe);
-            }else if(!availableStep){
+            } else if (!availableStep) {
                 cout << "Draw!";
                 return 1;
             }
@@ -71,7 +78,7 @@ void moveAI(string figure, string array[rSIZE][rSIZE]) {
     int positionY = getRand();
 
     if (array[positionX][positionY] == "|") {
-        cout << "Move AI" << endl;
+        cout << "Move AI1" << endl;
         array[positionX][positionY] = figure;
         printField(array);
     } else {
@@ -254,7 +261,7 @@ bool isWinner(string figure, string array[rSIZE][rSIZE]) {
 //    diagonal 02-02
     if (array[0][2] == figure) {
         if (array[1][1] == figure) {
-            if(array[2][0] == figure){
+            if (array[2][0] == figure) {
                 return true;
             }
         }
