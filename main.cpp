@@ -265,9 +265,9 @@ bool hasEmptySlot(string array[rSIZE][rSIZE]) {
 bool getWinner(string figure, string array[rSIZE][rSIZE]) {
     if (isWinner(figure, array)) {
         cout << figure << " - winner!" << endl << endl;
-        if(figure == "x"){
+        if (figure == "x") {
             scoreCross++;
-        }else if(figure == "o"){
+        } else if (figure == "o") {
             scoreZero++;
         }
         return true;
