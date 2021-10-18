@@ -31,10 +31,10 @@ int main() {
     srand(time(NULL));
 
     string arrayTicTacToe[rSIZE][rSIZE];
-    string figure = "";
+    string figure;
 
-    bool availableStep = false;
-    bool hasWinner = true;
+    bool availableStep;
+    bool hasWinner;
     int menuPoint = 0;
     int exitMenu = 1;
 
@@ -43,8 +43,10 @@ int main() {
     while (exitMenu != 2) {
         printMenu();
         fillingSFiled(arrayTicTacToe);
+
         cin >> menuPoint;
         cout << endl;
+
         switch (menuPoint) {
             case 1:
                 cout << "Choose who to play for ('x' OR 'o')" << endl;
@@ -112,10 +114,13 @@ void moveAI(string figure, string array[rSIZE][rSIZE]) {
 void moveUser(string figure, string array[rSIZE][rSIZE]) {
     bool stepUser = false;
     int position;
+
     while (!stepUser) {
         printNumPad();
+
         cin >> position;
         cout << endl;
+
         if (position >= 1 && position <= 9) {
             switch (position) {
                 case 1:
@@ -277,7 +282,7 @@ bool getWinner(string figure, string array[rSIZE][rSIZE]) {
 
 bool isWinner(string figure, string array[rSIZE][rSIZE]) {
     int figureCounter = 0;
-    //horizon check
+
     for (int i = 0; i < rSIZE; i++) {
         for (int j = 0; j < rSIZE; j++) {
             if (array[i][j] == figure) {
@@ -289,9 +294,9 @@ bool isWinner(string figure, string array[rSIZE][rSIZE]) {
         }
         figureCounter = 0;
     }
+
     figureCounter = 0;
 
-    //vertical check
     for (int j = 0; j < rSIZE; j++) {
         for (int i = 0; i < rSIZE; i++) {
             if (array[i][j] == figure) {
@@ -303,9 +308,9 @@ bool isWinner(string figure, string array[rSIZE][rSIZE]) {
         }
         figureCounter = 0;
     }
+
     figureCounter = 0;
 
-    //diagonal 00-22
     for (int i = 0; i < rSIZE; i++) {
         for (int j = 0; j < rSIZE; j++) {
             if (i == j && array[i][j] == figure) {
@@ -315,10 +320,9 @@ bool isWinner(string figure, string array[rSIZE][rSIZE]) {
                 }
             }
         }
+        figureCounter = 0;
     }
-    figureCounter = 0;
 
-//    diagonal 02-02
     if (array[0][2] == figure) {
         if (array[1][1] == figure) {
             if (array[2][0] == figure) {
@@ -326,16 +330,5 @@ bool isWinner(string figure, string array[rSIZE][rSIZE]) {
             }
         }
     }
-
-//    for (int j = rSIZE; j > 0; j--) {
-//        for (int i = rSIZE; i > 0; i--) {
-//            if (i == j && array[i][j] == figure) {
-//                figureCounter++;
-//                if (figureCounter == 3) {
-//                    return true;
-//                }
-//            }
-//        }
-//    }
     return false;
 }
